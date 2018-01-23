@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+
+	options {
+	disableConcurrentBuilds()
+	}
+	environment {
+
+	// Application Specific    
+	NEXUS_ARTIFACTID="DemoNunit"
+	NEXUS_IQ_STAGE="release"
+	ARTIFACT_FILENAME="DemoNunit.zip"
+	NEXUS_REPOSITORY="maven-central"
+	NEXUS_GROUP="maven-public"
+	TARGET_VERSION=''
+	VERSION_TAG="v1.42"
+	GIT_PROJECT="rahoodroshan/NunitDemo"
+	}
+	stages 
+	{
+		stage( 'Checkout Source' ) 
+		{
+		//Checkout source code from GIT
+			steps
+			{			
+				checkout changelog: false, poll: false, 
+								scm: [$class: 'GitSCM', 
+								branches: [[name: '*/master']], 
+								doGenerateSubmoduleConfigurations: false, 
+								extensions: [], 
+								submoduleCfg: [], 
+								userRemoteConfigs: [[credentialsId: 'GIT_SSH_CRED', url: 'https://github.com/rahoodroshan/game-of-life.git']]]
+
+			}
+		}//End Checkout Source   		
+	}
+}
