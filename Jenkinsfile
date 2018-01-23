@@ -22,17 +22,9 @@ pipeline {
 		stage( 'Checkout Source' ) 
 		{
 		//Checkout source code from GIT
-			steps
-			{			
-				checkout changelog: false, poll: false, 
-								scm: [$class: 'GitSCM', 
-								branches: [[name: '*/master']], 
-								doGenerateSubmoduleConfigurations: false, 
-								extensions: [], 
-								submoduleCfg: [], 
-								userRemoteConfigs: [[credentialsId: 'GIT_SSH_CRED', url: 'https://github.com/rahoodroshan/game-of-life.git']]]
-
-			}
+		    steps{
+			git "https://github.com/rahoodroshan/game-of-life.git"
+		    }
 		}//End Checkout Source   
 		stage ( 'complie' ){
 		    steps{
