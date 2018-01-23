@@ -4,6 +4,7 @@ pipeline {
 	options {
 	disableConcurrentBuilds()
 	}
+			
 	environment {
 
 	// Application Specific    
@@ -32,6 +33,44 @@ pipeline {
 								userRemoteConfigs: [[credentialsId: 'GIT_SSH_CRED', url: 'https://github.com/rahoodroshan/game-of-life.git']]]
 
 			}
-		}//End Checkout Source   		
+		}//End Checkout Source   
+		stage ( 'complie' ){
+		    steps{
+		       withMaven( maven : 'localMaven' ){
+		       bat 'mvn clean compile'
+		    }
+		   }
+		}
+		stage ('testing' ){
+		    steps{
+		        withMaven( maven : 'localMaven' ){
+		        bat 'mvn test'
+		       }
+		    }
+		}
+		stage( 'IQ_Scan' ){
+		     steps{
+			nexusPolicyEvaluation failBuildOnNetworkError: false, 
+				iqApplication: 'GameofLife_App', 
+				iqScanPatterns: [[scanPattern:  '**/gameoflife-core.jar']], 
+				iqStage: 'release', 
+				jobCredentialsId: 'NexusIQCedentials'
+			     
+     			}
+     		}
+		stage( "Deploy" ){
+		      steps{
+				nexusArtifactUploader artifacts: [[artifactId: 'gameoflife-core', classifier: '', file: 'gameoflife-core/build/libs/gameoflife-core.jar', type: 'jar']],
+				credentialsId: 'NexusRepoCredentials', 
+				groupId: 'GameofLifeGroup', 
+				nexusUrl: 'localhost:9091', 
+				nexusVersion: 'nexus3', 
+				protocol: 'http', 
+				repository: 'GameofLifeRepo', 
+				version: '1.0'
+			}
+		}
+    	
+	
 	}
 }
