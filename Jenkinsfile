@@ -50,7 +50,7 @@ pipeline {
 			     
      			}
      		}
-		stage( "Deploy" ){
+		stage( "Upload To Nexus" ){
 		      steps{
 				nexusArtifactUploader artifacts: [[artifactId: 'gameoflife-core', classifier: '', file: 'gameoflife-core/build/libs/gameoflife-core.jar', type: 'jar']],
 				credentialsId: 'NexusRepoCredentials', 
