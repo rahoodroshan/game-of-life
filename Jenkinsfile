@@ -26,14 +26,14 @@ pipeline {
 			git "https://github.com/rahoodroshan/game-of-life.git"
 		    }
 		}//End Checkout Source   
-		stage ( 'complie' ){
+		stage ( 'Complie' ){
 		    steps{
 		       withMaven( maven : 'localMaven' ){
 		       bat 'mvn clean compile'
 		    }
 		   }
 		}
-		stage ('testing' ){
+		stage ('Testing' ){
 		    steps{
 		        withMaven( maven : 'localMaven' ){
 		        bat 'mvn test'
